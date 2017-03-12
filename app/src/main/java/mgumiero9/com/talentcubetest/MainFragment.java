@@ -81,7 +81,7 @@ public class MainFragment extends Fragment  {
 
         view = inflater.inflate(R.layout.fragment, container, false);
 
-        Button btnStart = (Button) getActivity().findViewById(R.id.btn_start);
+        Button btnStart = (Button) view.findViewById(R.id.btn_start);
 
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
