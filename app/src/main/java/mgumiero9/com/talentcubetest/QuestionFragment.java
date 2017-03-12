@@ -436,7 +436,7 @@ public class QuestionFragment extends Fragment
         myCountDown = (TextView) view.findViewById(R.id.countdown7);
 
         // Counting Down
-        new CountDownTimer(7000, 1000) {
+        new CountDownTimer(45000, 1000) {
 
             public void onTick(long millisUntilFinished) {
                 myCountDown.setText("" + ((millisUntilFinished / 1000) - 1));
