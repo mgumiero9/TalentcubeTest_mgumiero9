@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">TalentcubeTest</string>
+    <string name="question_1">QUESTION 1</string>
+    <string name="start">START</string>
+    <string name="question_3">QUESTION 3</string>
+    <string name="question_2">QUESTION 2</string>
+    <string name="why">Why do you want to work for our company</string>
+
+    <!--Camera2Basic-->
+    <string name="description_info">Info</string>
+    <string name="request_permission">Este aplicativo precisa ter acesso à câmera</string>
+    <string name="request_permission_gps">Este aplicativo precisa ter acesso ao GPS.</string>
+    <string name="camera_error">This device doesn\'t support Camera2 API.</string>
+</resources>
