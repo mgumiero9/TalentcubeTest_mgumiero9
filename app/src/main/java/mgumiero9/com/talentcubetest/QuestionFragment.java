@@ -96,7 +96,7 @@ public class QuestionFragment extends Fragment
     /**
      * Tag for the {@link Log}.
      */
-    private static final String TAG = "CNH1Fragment";
+    private static final String TAG = QuestionFragment.class.getSimpleName();
 
     /**
      * Camera state: Showing camera preview.
@@ -436,7 +436,7 @@ public class QuestionFragment extends Fragment
         myCountDown = (TextView) view.findViewById(R.id.countdown7);
 
         // Counting Down
-        new CountDownTimer(45000, 1000) {
+        new CountDownTimer(4000, 1000) {
 
             public void onTick(long millisUntilFinished) {
                 myCountDown.setText("" + ((millisUntilFinished / 1000) - 1));
@@ -444,7 +444,12 @@ public class QuestionFragment extends Fragment
 
             public void onFinish() {
                 //myCountDown.setText("done!");
-                takePicture();
+                //takePicture();
+                Camera2VideoFragment camera2VideoFragment = new Camera2VideoFragment();
+                getActivity().getFragmentManager().beginTransaction()
+                        .replace(R.id.container, camera2VideoFragment)
+                        .addToBackStack(null)
+                        .commit();
             }
         }.start();
 
