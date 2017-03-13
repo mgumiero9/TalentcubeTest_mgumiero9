@@ -39,6 +39,7 @@ import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.MediaRecorder;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
@@ -53,6 +54,7 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -74,7 +76,7 @@ public class Camera2VideoFragment extends Fragment
     private static final SparseIntArray DEFAULT_ORIENTATIONS = new SparseIntArray();
     private static final SparseIntArray INVERSE_ORIENTATIONS = new SparseIntArray();
 
-    private static final String TAG = "Camera2VideoFragment";
+    private static final String TAG = Camera2VideoFragment.class.getSimpleName();
     private static final int REQUEST_VIDEO_PERMISSIONS = 1;
     private static final String FRAGMENT_DIALOG = "dialog";
 
@@ -221,6 +223,8 @@ public class Camera2VideoFragment extends Fragment
     private String mNextVideoAbsolutePath;
     private CaptureRequest.Builder mPreviewBuilder;
     private Surface mRecorderSurface;
+    private TextView myCountDown;
+    private Button mButtonOk;
 
     public static Camera2VideoFragment newInstance() {
         return new Camera2VideoFragment();
@@ -286,6 +290,40 @@ public class Camera2VideoFragment extends Fragment
         mTextureView = (AutoFitTextureView) view.findViewById(R.id.texture);
         mButtonVideo = (Button) view.findViewById(R.id.video);
         mButtonVideo.setOnClickListener(this);
+        mButtonOk = (Button) view.findViewById(R.id.btn_ok);
+        mButtonOk.setOnClickListener(this);
+
+
+        myCountDown = (TextView) view.findViewById(R.id.countdown8);
+
+        startRecordingVideo();
+        Log.e(TAG, "started recording...");
+        Log.e(TAG, "This is the variable mIsRecordingVideo: " + mIsRecordingVideo);
+
+        // Counting Down
+        new CountDownTimer(6000, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                myCountDown.setText("" + ((millisUntilFinished / 1000) - 1));
+            }
+
+            public void onFinish() {
+                //myCountDown.setText("done!");
+                //takePicture();
+
+                if (mIsRecordingVideo) {
+                    stopRecordingVideo();
+                    Log.e(TAG, "stopping recording video... timer");
+
+                }
+
+                VideoView videoView = new VideoView();
+                getActivity().getFragmentManager().beginTransaction()
+                        .replace(R.id.container, videoView)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        }.start();
     }
 
     @Override
@@ -325,6 +363,21 @@ public class Camera2VideoFragment extends Fragment
                             .setPositiveButton(android.R.string.ok, null)
                             .show();
                 }
+                break;
+            }
+            case R.id.btn_ok: {
+
+                Log.e(TAG, "This is the variable mIsRecordingVideo: " + mIsRecordingVideo);
+                if (mIsRecordingVideo) {
+                    stopRecordingVideo();
+                    Log.e(TAG, "stopping recording video... Stop button");
+                }
+
+                VideoView videoView = new VideoView();
+                getActivity().getFragmentManager().beginTransaction()
+                        .replace(R.id.container, videoView)
+                        .addToBackStack(null)
+                        .commit();
                 break;
             }
         }
@@ -382,7 +435,7 @@ public class Camera2VideoFragment extends Fragment
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        Log.d(TAG, "onRequestPermissionsResult");
+        Log.e(TAG, "onRequestPermissionsResult");
         if (requestCode == REQUEST_VIDEO_PERMISSIONS) {
             if (grantResults.length == VIDEO_PERMISSIONS.length) {
                 for (int result : grantResults) {
@@ -425,7 +478,7 @@ public class Camera2VideoFragment extends Fragment
         }
         CameraManager manager = (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
         try {
-            Log.d(TAG, "tryAcquire");
+            Log.e(TAG, "tryAcquire");
             if (!mCameraOpenCloseLock.tryAcquire(2500, TimeUnit.MILLISECONDS)) {
                 throw new RuntimeException("Time out waiting to lock camera opening.");
             }
@@ -694,7 +747,7 @@ public class Camera2VideoFragment extends Fragment
         if (null != activity) {
             Toast.makeText(activity, "Video saved: " + mNextVideoAbsolutePath,
                     Toast.LENGTH_SHORT).show();
-            Log.d(TAG, "Video saved: " + mNextVideoAbsolutePath);
+            Log.e(TAG, "Video saved: " + mNextVideoAbsolutePath);
         }
         mNextVideoAbsolutePath = null;
         startPreview();
