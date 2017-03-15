@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package mgumiero9.com.talentcubetest.Camera2Basic;
+package mgumiero9.com.talentcubetest;
 
 import android.content.Context;
 import android.util.AttributeSet;
