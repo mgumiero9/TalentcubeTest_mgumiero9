@@ -74,8 +74,6 @@ import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
-import mgumiero9.com.talentcubetest.Camera2Basic.AutoFitTextureView;
-
 public class QuestionFragment extends Fragment
         implements View.OnClickListener, FragmentCompat.OnRequestPermissionsResultCallback {
 

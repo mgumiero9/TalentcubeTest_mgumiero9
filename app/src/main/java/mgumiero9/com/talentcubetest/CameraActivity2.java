@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package mgumiero9.com.talentcubetest.Camera2Basic;
+package mgumiero9.com.talentcubetest;
 
 import android.support.v7.app.AppCompatActivity;
 

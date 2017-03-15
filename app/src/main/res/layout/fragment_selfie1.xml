@@ -8,7 +8,7 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <mgumiero9.com.talentcubetest.Camera2Basic.AutoFitTextureView
+    <mgumiero9.com.talentcubetest.AutoFitTextureView
         android:id="@+id/texture7"
         android:layout_width="0dp"
         android:layout_height="400dp"

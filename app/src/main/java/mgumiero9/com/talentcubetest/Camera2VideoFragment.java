@@ -66,8 +66,6 @@ import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
-import mgumiero9.com.talentcubetest.Camera2Basic.AutoFitTextureView;
-
 public class Camera2VideoFragment extends Fragment
         implements View.OnClickListener, FragmentCompat.OnRequestPermissionsResultCallback {
 
@@ -282,21 +280,27 @@ public class Camera2VideoFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_camera2_video, container, false);
+        View view = inflater.inflate(R.layout.fragment_camera2_video, container, false);
+
+        mButtonVideo = (Button) view.findViewById(R.id.video);
+        mButtonVideo.setOnClickListener(this);
+        mButtonVideo.performClick();
+
+        return view;
+
     }
 
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
         mTextureView = (AutoFitTextureView) view.findViewById(R.id.texture);
-        mButtonVideo = (Button) view.findViewById(R.id.video);
-        mButtonVideo.setOnClickListener(this);
+
         mButtonOk = (Button) view.findViewById(R.id.btn_ok);
         mButtonOk.setOnClickListener(this);
 
-
         myCountDown = (TextView) view.findViewById(R.id.countdown8);
 
-        startRecordingVideo();
+        mButtonVideo.performClick();
+
         Log.e(TAG, "started recording...");
         Log.e(TAG, "This is the variable mIsRecordingVideo: " + mIsRecordingVideo);
 
@@ -324,6 +328,7 @@ public class Camera2VideoFragment extends Fragment
                         .commit();
             }
         }.start();
+
     }
 
     @Override
@@ -335,6 +340,7 @@ public class Camera2VideoFragment extends Fragment
         } else {
             mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
         }
+        mButtonVideo.performClick();
     }
 
     @Override
