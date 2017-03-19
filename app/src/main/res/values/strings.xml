@@ -30,4 +30,8 @@
         ]]>
     </string>
     <string name="ok">Ok ?</string>
+    <string name="continue_string">"  CONTINUE  "</string>
+    <string name="second_try">SECOND TRY</string>
+    <string name="play">play</string>
+    <string name="done">done</string>
 </resources>

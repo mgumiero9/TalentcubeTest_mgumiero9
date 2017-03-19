@@ -1,20 +1,4 @@
-package mgumiero9.com.talentcubetest;
-
-/*
- * Copyright 2014 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+package mgumiero9.com.talentcubetest.view;
 
 import android.Manifest;
 import android.app.Activity;
@@ -73,6 +57,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
+
+import mgumiero9.com.talentcubetest.R;
+import mgumiero9.com.talentcubetest.util.AutoFitTextureView;
 
 public class QuestionFragment extends Fragment
         implements View.OnClickListener, FragmentCompat.OnRequestPermissionsResultCallback {
@@ -433,7 +420,7 @@ public class QuestionFragment extends Fragment
         myCountDown = (TextView) view.findViewById(R.id.countdown7);
 
         // Counting Down
-        new CountDownTimer(4000, 1000) {
+        new CountDownTimer(45000, 1000) {
 
             public void onTick(long millisUntilFinished) {
                 myCountDown.setText("" + ((millisUntilFinished / 1000) - 1));

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package mgumiero9.com.talentcubetest;
+package mgumiero9.com.talentcubetest.util;
 
 import android.content.Context;
 import android.util.AttributeSet;

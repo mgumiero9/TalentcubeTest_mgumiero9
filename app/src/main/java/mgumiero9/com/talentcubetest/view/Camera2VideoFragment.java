@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package mgumiero9.com.talentcubetest;
+package mgumiero9.com.talentcubetest.view;
 
 import android.Manifest;
 import android.app.Activity;
@@ -24,6 +24,7 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Matrix;
@@ -65,6 +66,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
+
+import mgumiero9.com.talentcubetest.R;
+import mgumiero9.com.talentcubetest.util.AutoFitTextureView;
+import mgumiero9.com.talentcubetest.util.SharedPrefStore;
 
 public class Camera2VideoFragment extends Fragment
         implements View.OnClickListener, FragmentCompat.OnRequestPermissionsResultCallback {
@@ -282,10 +287,6 @@ public class Camera2VideoFragment extends Fragment
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_camera2_video, container, false);
 
-        mButtonVideo = (Button) view.findViewById(R.id.video);
-        mButtonVideo.setOnClickListener(this);
-
-        mButtonVideo.performClick();
 
         return view;
 
@@ -300,15 +301,16 @@ public class Camera2VideoFragment extends Fragment
 
         myCountDown = (TextView) view.findViewById(R.id.countdown8);
 
+        mButtonVideo = (Button) view.findViewById(R.id.video);
         mButtonVideo.setOnClickListener(this);
 
-        mButtonVideo.performClick();
+        //Log.e(TAG, "performed click: " + mButtonVideo.performClick());
 
         Log.e(TAG, "started recording...");
         Log.e(TAG, "This is the variable mIsRecordingVideo: " + mIsRecordingVideo);
 
         // Counting Down
-        new CountDownTimer(4000, 1000) {
+        new CountDownTimer(45000, 1000) {
 
             public void onTick(long millisUntilFinished) {
                 myCountDown.setText("" + ((millisUntilFinished / 1000) - 1));
@@ -324,9 +326,9 @@ public class Camera2VideoFragment extends Fragment
 
                 }
 
-                VideoView videoView = new VideoView();
+                VideoDisplay videoDisplay = new VideoDisplay();
                 getActivity().getFragmentManager().beginTransaction()
-                        .replace(R.id.container, videoView)
+                        .replace(R.id.container, videoDisplay)
                         .addToBackStack(null)
                         .commit();
             }
@@ -340,12 +342,11 @@ public class Camera2VideoFragment extends Fragment
         startBackgroundThread();
         if (mTextureView.isAvailable()) {
             openCamera(mTextureView.getWidth(), mTextureView.getHeight());
+
         } else {
             mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
         }
-        mButtonVideo.setOnClickListener(this);
 
-        mButtonVideo.performClick();
     }
 
     @Override
@@ -384,9 +385,9 @@ public class Camera2VideoFragment extends Fragment
                     Log.e(TAG, "stopping recording video... Stop button");
                 }
 
-                VideoView videoView = new VideoView();
+                VideoDisplay videoDisplay = new VideoDisplay();
                 getActivity().getFragmentManager().beginTransaction()
-                        .replace(R.id.container, videoView)
+                        .replace(R.id.container, videoDisplay)
                         .addToBackStack(null)
                         .commit();
                 break;
@@ -490,8 +491,7 @@ public class Camera2VideoFragment extends Fragment
         CameraManager manager = (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
         try {
             Log.e(TAG, "tryAcquire");
-            mButtonVideo.setOnClickListener(this);
-            mButtonVideo.performClick();
+
             if (!mCameraOpenCloseLock.tryAcquire(2500, TimeUnit.MILLISECONDS)) {
                 throw new RuntimeException("Time out waiting to lock camera opening.");
             }
@@ -514,6 +514,7 @@ public class Camera2VideoFragment extends Fragment
             }
             configureTransform(width, height);
             mMediaRecorder = new MediaRecorder();
+
             if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
                 //    ActivityCompat#requestPermissions
@@ -580,6 +581,7 @@ public class Camera2VideoFragment extends Fragment
                 public void onConfigured(CameraCaptureSession cameraCaptureSession) {
                     mPreviewSession = cameraCaptureSession;
                     updatePreview();
+
                 }
 
                 @Override
@@ -590,6 +592,8 @@ public class Camera2VideoFragment extends Fragment
                     }
                 }
             }, mBackgroundHandler);
+
+
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }
@@ -677,14 +681,14 @@ public class Camera2VideoFragment extends Fragment
     }
 
     private String getVideoFilePath(Context context) {
-        return context.getExternalFilesDir(null).getAbsolutePath() + "/"
-                + System.currentTimeMillis() + ".mp4";
+        return context.getExternalFilesDir(null).getAbsolutePath() + "/answerq1.mp4";
     }
 
     private void startRecordingVideo() {
         if (null == mCameraDevice || !mTextureView.isAvailable() || null == mPreviewSize) {
             return;
         }
+
         try {
             closePreviewSession();
             setUpMediaRecorder();
@@ -753,8 +757,27 @@ public class Camera2VideoFragment extends Fragment
         mIsRecordingVideo = false;
         mButtonVideo.setText(R.string.record);
         // Stop recording
-        mMediaRecorder.stop();
-        mMediaRecorder.reset();
+        if (mIsRecordingVideo) {
+            mMediaRecorder.stop();
+            mMediaRecorder.reset();
+        }
+
+        /* Incrementing the video counter */
+        SharedPreferences myPreferences = getActivity().getSharedPreferences("myPrefs",0);
+
+        String mWhichTry = myPreferences.getString("SPwhichTry","");
+        Log.e(TAG, "SPwhichTry: " + mWhichTry);
+
+        SharedPreferences.Editor editor = myPreferences.edit();
+        SharedPrefStore mSharedPrefStore = new SharedPrefStore();
+
+        if (mWhichTry.equals("")) {
+            mSharedPrefStore.StorePair(myPreferences, editor, "SPwhichTry", "first");
+        } else {
+            if (mWhichTry.equals("first")) {
+                mSharedPrefStore.StorePair(myPreferences, editor, "SPwhichTry", "second");
+            }
+        }
 
         Activity activity = getActivity();
         if (null != activity) {

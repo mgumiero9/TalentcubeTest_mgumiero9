@@ -43,6 +43,18 @@
             android:text="@string/start"
             />
 
+        <Button
+            android:id="@+id/done1"
+            android:layout_width="wrap_content"
+            android:layout_height="32sp"
+            android:layout_gravity="center"
+            android:layout_marginTop="55dp"
+            android:text="@string/done"
+            android:textColor="@color/colorWhite"
+            android:visibility="gone"
+            android:background="@drawable/square_round_all_green"
+            />
+
 
     </FrameLayout>
 
@@ -60,12 +72,38 @@
         >
 
         <TextView
+            android:id="@+id/tv_question2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/question_2"
             android:layout_gravity="center"
             android:textColor="#000000"
             android:textSize="22sp"
+            />
+
+        <Button
+            android:id="@+id/btn_start2"
+            android:textColor="#ffffff"
+            android:layout_width="wrap_content"
+            android:layout_height="32sp"
+            android:layout_gravity="center"
+            android:layout_marginTop="55dp"
+            android:background="@drawable/square_round_all"
+            android:text="@string/start"
+
+            />
+
+        <Button
+            android:id="@+id/done2"
+            android:layout_width="wrap_content"
+            android:layout_height="24sp"
+            android:layout_gravity="end"
+            android:layout_marginTop="32sp"
+            android:layout_marginEnd="16sp"
+            android:text="@string/done"
+            android:textColor="@color/colorWhite"
+            android:visibility="gone"
+            android:background="@drawable/square_round_all_green"
             />
 
     </FrameLayout>

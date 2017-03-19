@@ -1,14 +1,21 @@
 package mgumiero9.com.talentcubetest;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import mgumiero9.com.talentcubetest.util.SharedPrefStore;
+import mgumiero9.com.talentcubetest.view.MainFragment;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+    private SharedPreferences.Editor editor;
+    private SharedPreferences mSharedPreferences;
+    private SharedPrefStore mSharedPrefStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,12 +25,18 @@ public class MainActivity extends AppCompatActivity {
 
         hideSystemUI(this);
 
+        /* Reset counters */
+        mSharedPreferences = getSharedPreferences("myPrefs",0);
+        editor = mSharedPreferences.edit();
+        mSharedPrefStore = new SharedPrefStore();
+        mSharedPrefStore.StorePair(mSharedPreferences, editor, "questionFinished", "");
+        mSharedPrefStore.StorePair(mSharedPreferences, editor, "SPwhichTry", "");
+
         if (null == savedInstanceState) {
             getFragmentManager().beginTransaction()
                     .replace(R.id.container, MainFragment.newInstance())
                     .commit();
         }
-
     }
 
     private static void hideSystemUI(Activity activity) {

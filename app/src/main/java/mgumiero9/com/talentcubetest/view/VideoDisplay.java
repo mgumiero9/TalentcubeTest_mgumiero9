@@ -1,34 +1,39 @@
-package mgumiero9.com.talentcubetest;
+package mgumiero9.com.talentcubetest.view;
+
+/**
+ * Created by mgumiero9 on 17/03/17.
+ */
 
 import android.app.Fragment;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.MediaController;
+import android.widget.VideoView;
+
+import mgumiero9.com.talentcubetest.R;
+import mgumiero9.com.talentcubetest.util.SharedPrefStore;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link MainFragment.OnFragmentInteractionListener} interface
+ * {@link VideoDisplay.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link MainFragment#newInstance} factory method to
+ * Use the {@link VideoDisplay#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MainFragment extends Fragment  {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    //private static final String ARG_PARAM1 = "param1";
-    //private static final String ARG_PARAM2 = "param2";
+public class VideoDisplay extends Fragment  {
 
-    private static final String TAG = MainFragment.class.getSimpleName();
+    private static final String TAG = VideoDisplay.class.getSimpleName();
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private int whichTry = 1;
 
     private OnFragmentInteractionListener mListener;
     private Typeface mTypeFace;
@@ -37,30 +42,17 @@ public class MainFragment extends Fragment  {
     private View view;
     private Button mBtnTutCadNext;
     private String viaCepUrl;
+    private String mWhichTry;
+    private SharedPreferences.Editor editor;
+    private SharedPrefStore mSharedPrefStore;
 
 
-    public MainFragment() {
+    public VideoDisplay() {
         // Required empty public constructor
     }
 
-/*    *//**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment PwdFragment.
-     *//*
-    // TODO: Rename and change types and number of parameters
-    public static PwdFragment newInstance() {
-        PwdFragment fragment = new PwdFragment();
-        Bundle args = new Bundle();
-        //args.putString(ARG_PARAM1, param1);
-        //args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }*/
-
-    public static MainFragment newInstance() {
-        return new MainFragment();
+    public static VideoDisplay newInstance() {
+        return new VideoDisplay();
     }
 
     @Override
@@ -79,27 +71,63 @@ public class MainFragment extends Fragment  {
 
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        view = inflater.inflate(R.layout.fragment, container, false);
+        view = inflater.inflate(R.layout.fragment_video_view, container, false);
 
-        Button btnStart = (Button) view.findViewById(R.id.btn_start);
+        final SharedPreferences mSharedPreferences = getActivity().getSharedPreferences("myPrefs",0);
+        mWhichTry = mSharedPreferences.getString("SPwhichTry","");
+        Log.e(TAG, "SPwhichTry: " + mWhichTry);
 
-        btnStart.setOnClickListener(new View.OnClickListener() {
+        Button btnSecondTry = (Button) view.findViewById(R.id.btn_second_try);
+
+        btnSecondTry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                QuestionFragment questionFragment= new QuestionFragment();
+                
+                if (mWhichTry.equals("first")) {
+                    getFragmentManager().popBackStackImmediate();
+                }
+            }
+        });
+
+        Button btnContinue = (Button) view.findViewById(R.id.btn_continue);
+
+        editor = mSharedPreferences.edit();
+        mSharedPrefStore = new SharedPrefStore();
+        
+        btnContinue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mSharedPrefStore.StorePair(mSharedPreferences, editor, "questionFinished", "one");
+
+                MainFragment mainFragment = new MainFragment();
                 getActivity().getFragmentManager().beginTransaction()
-                        .replace(R.id.container, questionFragment)
+                        .replace(R.id.container, mainFragment)
                         .addToBackStack(null)
                         .commit();
             }
         });
 
+        Button btnPlayStop = (Button) view.findViewById(R.id.btn_play_stop);
+        btnPlayStop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                VideoView videoView = (VideoView) view.findViewById(R.id.videoview);
+                //MediaController mediaController = new MediaController(this);
+                // mediaController.setAnchorView(videoView);
+                //videoView.setMediaController(mediaController);
 
+                videoView.setMediaController(new MediaController(getActivity()));
+                videoView.setVideoPath("/answerq1.mp4");
+                videoView.requestFocus();
+                videoView.start();
+            }
+        });
 
         return view;
     }
 
-       // TODO: Rename method, update argument and hook method into UI event
+    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -139,3 +167,4 @@ public class MainFragment extends Fragment  {
         void onFragmentInteraction(Uri uri);
     }
 }
+
